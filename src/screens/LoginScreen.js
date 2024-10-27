@@ -1,104 +1,68 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 
-export default function LoginScreen({ onLogin }) {
-  const [username, setUsername] = useState('');
+const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // New handleLogin function that connects to the backend
-  const handleLogin = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
+  const handleLogin = () => {
+    // Replace these with your actual login credentials or an API request
+    const validEmail = 'user@example.com';
+    const validPassword = 'password123';
 
-      const result = await response.json();
-
-      if (response.ok) {
-        onLogin(); // Navigate to the next screen on successful login
-      } else {
-        alert(result.message); // Show error message if login fails
-      }
-    } catch (error) {
-      alert('An error occurred. Please try again.'); // Handle any other errors
-    }
-  };
-
-  // Old handleLogin function (commented out for reference)
-  /*
-  const handleLoginOld = () => {
-    if (username && password) {
-      onLogin(); // Navigate to the next screen if input is valid
+    if (email === validEmail && password === validPassword) {
+      // Navigate to the home screen if login is successful
+      navigation.navigate('HomeScreen');
     } else {
-      alert("Please enter both username and password."); // Show alert if fields are empty
+      // Show an error message if login fails
+      Alert.alert('Login Failed', 'Invalid email or password');
     }
   };
-  */
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>BankSave Login</Text>
-      
+      <Text style={styles.title}>Login</Text>
       <TextInput
         style={styles.input}
-        placeholder="Username"
-        placeholderTextColor="#888"
-        value={username}
-        onChangeText={setUsername}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
-
       <TextInput
         style={styles.input}
         placeholder="Password"
-        placeholderTextColor="#888"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>Login</Text>
-      </TouchableOpacity>
+      <Button title="Login" onPress={handleLogin} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    padding: 20,
+    padding: 16,
+    backgroundColor: '#f9f9f9',
   },
   title: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 30,
+    textAlign: 'center',
+    marginBottom: 20,
   },
   input: {
-    width: '100%',
-    padding: 12,
-    marginBottom: 15,
-    borderWidth: 1,
+    height: 50,
     borderColor: '#ccc',
-    borderRadius: 8,
-    backgroundColor: '#fff',
-  },
-  loginButton: {
-    width: '100%',
-    padding: 12,
-    borderRadius: 8,
-    backgroundColor: '#007bff',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  loginButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 10,
+    borderRadius: 5,
   },
 });
+
+export default LoginScreen;  
